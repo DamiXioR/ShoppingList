@@ -42,6 +42,8 @@ function dropElementOnElement(event) {
     log.debug(`Index of Dragged Element: ${indexOfDraggedElement}, Index of Hovered Element: ${indexOfHoveredElement}`);
     if (indexOfHoveredElement == indexOfDraggedElement){
         shoppingList.splice(indexOfHoveredElement + 1, 0, draggedElement);
+    } else if (indexOfHoveredElement == shoppingList.length - 1){
+        shoppingList.push(draggedElement);
     } else {
         shoppingList.splice(indexOfHoveredElement, 0, draggedElement);
     }
