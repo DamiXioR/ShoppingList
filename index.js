@@ -8,56 +8,56 @@ let products = document.getElementById('products');
 let toBuy = document.getElementById('to-buy');
 let trash = document.getElementById('trash');
 let demo = document.getElementById('demo');
-let currentlyDraggedElementId = null;
-let isElementDropJustDone = false;
+let currentlyDraggedItemId = null;
+let isItemDropJustDone = false;
 let shoppingList = [];
 
 function allowDrop(event){
     event.preventDefault();
 }
 
-function enterActionOnHoveredElement(event){
-    let hoveredElement = document.getElementById(event.target.id);
-    hoveredElement.style.transition = 'color 0.4s ease, font-weight 0.4s ease';
-    hoveredElement.style.fontWeight = 'bold';
-    hoveredElement.style.color = '#32c9b1';
-    log.debug(`Drag Enter: ${hoveredElement.getAttribute('id')}`);
+function enterActionOnHoveredItem(event){
+    let hoveredItem = document.getElementById(event.target.id);
+    hoveredItem.style.transition = 'color 0.4s ease, font-weight 0.4s ease';
+    hoveredItem.style.fontWeight = 'bold';
+    hoveredItem.style.color = '#32c9b1';
+    log.debug(`Drag Enter: ${hoveredItem.getAttribute('id')}`);
 }
 
-function leaveActionOnHoveredElement(event){
-    let hoveredElement = document.getElementById(event.target.id);
-    hoveredElement.style.transition = '';
-    hoveredElement.style.fontWeight = 'normal';
-    hoveredElement.style.color = ''
-    log.debug(`Drag Leave: ${hoveredElement.getAttribute('id')}`);
+function leaveActionOnHoveredItem(event){
+    let hoveredItem = document.getElementById(event.target.id);
+    hoveredItem.style.transition = '';
+    hoveredItem.style.fontWeight = 'normal';
+    hoveredItem.style.color = ''
+    log.debug(`Drag Leave: ${hoveredItem.getAttribute('id')}`);
 }
 
-function dropElementOnElement(event) {
+function dropItemOnItem(event) {
     event.preventDefault();
 
-    if (event.target.id === currentlyDraggedElementId) {
-        log.debug('Dragged Element is the same as a Hovered Element');
+    if (event.target.id === currentlyDraggedItemId) {
+        log.debug('Dragged Item is the same as a Hovered Item');
         return;
     };
 
-    let draggedElement = document.getElementById(currentlyDraggedElementId);
-    let hoveredElement = document.getElementById(event.target.id);
-    hoveredElement.style.transition = '';
-    hoveredElement.style.fontWeight = 'normal';
-    hoveredElement.style.color = ''
+    let draggedItem = document.getElementById(currentlyDraggedItemId);
+    let hoveredItem = document.getElementById(event.target.id);
+    hoveredItem.style.transition = '';
+    hoveredItem.style.fontWeight = 'normal';
+    hoveredItem.style.color = ''
 
-    draggedElement.addEventListener('drop', dropElementOnElement);
-    draggedElement.addEventListener('dragenter', enterActionOnHoveredElement);
-    draggedElement.addEventListener('dragleave', leaveActionOnHoveredElement);
+    draggedItem.addEventListener('drop', dropItemOnItem);
+    draggedItem.addEventListener('dragenter', enterActionOnHoveredItem);
+    draggedItem.addEventListener('dragleave', leaveActionOnHoveredItem);
 
-    log.debug(`Dragged Element: ${draggedElement.getAttribute('id')}`);
-    log.debug(`Hovered Element: ${hoveredElement.getAttribute('id')}`);
+    log.debug(`Dragged Item: ${draggedItem.getAttribute('id')}`);
+    log.debug(`Hovered Item: ${hoveredItem.getAttribute('id')}`);
     log.debug(`Current shopping list: ${shoppingList.map(item => item.getAttribute('id')).join(', ')}`);
 
-    let indexOfDraggedElement = shoppingList.includes(draggedElement) ? shoppingList.indexOf(draggedElement) : null;
-    let indexOfHoveredElement = shoppingList.indexOf(hoveredElement);
+    let indexOfDraggedItem = shoppingList.includes(draggedItem) ? shoppingList.indexOf(draggedItem) : null;
+    let indexOfHoveredItem = shoppingList.indexOf(hoveredItem);
 
-    log.debug(`Index of Dragged Element: ${indexOfDraggedElement}, Index of Hovered Element: ${indexOfHoveredElement} before adding dragged`);
+    log.debug(`Index of Dragged Item: ${indexOfDraggedItem}, Index of Hovered Item: ${indexOfHoveredItem} before adding dragged`);
 
     const FIRST_SL_ITEM = 0;
     const LAST_SL_ITEM = shoppingList.length - 1;
@@ -67,44 +67,44 @@ function dropElementOnElement(event) {
     log.debug(`Index of the penultimate item ${PENULTIMATE_SL_ITEM}`);
     log.debug(`Shopping list size ${shoppingList.length}`);
 
-    if(indexOfDraggedElement == null){
-         if (indexOfHoveredElement >= 0 && indexOfHoveredElement < PENULTIMATE_SL_ITEM){
-            log.debug(`${draggedElement.getAttribute('id')} is a new item. Place at the hovered item.`);
-            shoppingList.splice(indexOfHoveredElement, 0, draggedElement);
-         } else if (indexOfHoveredElement == PENULTIMATE_SL_ITEM){
-            log.debug(`${draggedElement.getAttribute('id')} is a new item. The hovered item is the penultimate one in the list.`);
-            shoppingList.splice(indexOfHoveredElement + 1, 0, draggedElement);
-         } else if (indexOfHoveredElement == LAST_SL_ITEM){
-            log.debug(`${draggedElement.getAttribute('id')} is a new item. Hovered item is the last on the list.`);
-            shoppingList.push(draggedElement);
+    if(indexOfDraggedItem == null){
+         if (indexOfHoveredItem >= 0 && indexOfHoveredItem < PENULTIMATE_SL_ITEM){
+            log.debug(`${draggedItem.getAttribute('id')} is a new item. Place at the hovered item.`);
+            shoppingList.splice(indexOfHoveredItem, 0, draggedItem);
+         } else if (indexOfHoveredItem == PENULTIMATE_SL_ITEM){
+            log.debug(`${draggedItem.getAttribute('id')} is a new item. The hovered item is the penultimate one in the list.`);
+            shoppingList.splice(indexOfHoveredItem + 1, 0, draggedItem);
+         } else if (indexOfHoveredItem == LAST_SL_ITEM){
+            log.debug(`${draggedItem.getAttribute('id')} is a new item. Hovered item is the last on the list.`);
+            shoppingList.push(draggedItem);
          }
     } else {
-        let draggedItemHigherFactor = indexOfDraggedElement > indexOfHoveredElement ? 1 : 0;
-        if (indexOfHoveredElement == FIRST_SL_ITEM){
-            log.debug(`${draggedElement.getAttribute('id')} exists. Hovered item is the last on the list, put dragged item first.`);
-            shoppingList.unshift(draggedElement);
-            shoppingList.splice(indexOfDraggedElement + draggedItemHigherFactor, 1);
-        } else if (indexOfHoveredElement == LAST_SL_ITEM) {
-            log.debug(`${draggedElement.getAttribute('id')} exists. Hovered item is the last on the list.`);
-            shoppingList.push(draggedElement);
-            shoppingList.splice(indexOfDraggedElement + draggedItemHigherFactor, 1);
+        let draggedItemHigherFactor = indexOfDraggedItem > indexOfHoveredItem ? 1 : 0;
+        if (indexOfHoveredItem == FIRST_SL_ITEM){
+            log.debug(`${draggedItem.getAttribute('id')} exists. Hovered item is the last on the list, put dragged item first.`);
+            shoppingList.unshift(draggedItem);
+            shoppingList.splice(indexOfDraggedItem + draggedItemHigherFactor, 1);
+        } else if (indexOfHoveredItem == LAST_SL_ITEM) {
+            log.debug(`${draggedItem.getAttribute('id')} exists. Hovered item is the last on the list.`);
+            shoppingList.push(draggedItem);
+            shoppingList.splice(indexOfDraggedItem + draggedItemHigherFactor, 1);
         } else if (draggedItemHigherFactor){
-            log.debug(`${draggedElement.getAttribute('id')} exists. Pushed on hovered element place. Dragged is higher than hovered.`);
-            shoppingList.splice(indexOfHoveredElement, 0, draggedElement);
-            shoppingList.splice(indexOfDraggedElement + draggedItemHigherFactor, 1);
+            log.debug(`${draggedItem.getAttribute('id')} exists. Pushed on hovered Item place. Dragged is higher than hovered.`);
+            shoppingList.splice(indexOfHoveredItem, 0, draggedItem);
+            shoppingList.splice(indexOfDraggedItem + draggedItemHigherFactor, 1);
         } else {
-            log.debug(`${draggedElement.getAttribute('id')} exists. Pushed on hovered element place. Dragged is lower than hovered.`);
-            shoppingList.splice(indexOfHoveredElement + 1, 0, draggedElement);
-            shoppingList.splice(indexOfDraggedElement + draggedItemHigherFactor, 1);
+            log.debug(`${draggedItem.getAttribute('id')} exists. Pushed on hovered Item place. Dragged is lower than hovered.`);
+            shoppingList.splice(indexOfHoveredItem + 1, 0, draggedItem);
+            shoppingList.splice(indexOfDraggedItem + draggedItemHigherFactor, 1);
         }
     }
 
-    log.debug(`Current shopping list after putting Dragged Element in Hovered Element place: ${shoppingList.map(item => item.getAttribute('id')).join(', ')}`);
+    log.debug(`Current shopping list after putting Dragged Item in Hovered Item place: ${shoppingList.map(item => item.getAttribute('id')).join(', ')}`);
 
     updateToBuy();
 
-    isElementDropJustDone = true;
-    currentlyDraggedElementId = null;
+    isItemDropJustDone = true;
+    currentlyDraggedItemId = null;
 }
 
 function updateToBuy() {
@@ -120,24 +120,24 @@ function updateToBuy() {
 
 function drop(event){
     event.preventDefault();
-    if(isElementDropJustDone){
-        isElementDropJustDone = false;
+    if(isItemDropJustDone){
+        isItemDropJustDone = false;
         return;
     }
-    let droppedElement = document.getElementById(currentlyDraggedElementId);
-    if (shoppingList.includes(droppedElement)) return;
+    let droppedItem = document.getElementById(currentlyDraggedItemId);
+    if (shoppingList.includes(droppedItem)) return;
 
-    droppedElement.addEventListener('drop', dropElementOnElement);
-    droppedElement.addEventListener('dragenter', enterActionOnHoveredElement);
-    droppedElement.addEventListener('dragleave', leaveActionOnHoveredElement);
-    shoppingList.push(droppedElement);
+    droppedItem.addEventListener('drop', dropItemOnItem);
+    droppedItem.addEventListener('dragenter', enterActionOnHoveredItem);
+    droppedItem.addEventListener('dragleave', leaveActionOnHoveredItem);
+    shoppingList.push(droppedItem);
 
     updateToBuy();
-    currentlyDraggedElementId = null;
+    currentlyDraggedItemId = null;
 }
 
 function startDragProduct(event){
-    currentlyDraggedElementId = event.target.id;
+    currentlyDraggedItemId = event.target.id;
 }
 
 function submitProductButtonClicked(){
