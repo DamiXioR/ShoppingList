@@ -1,6 +1,6 @@
 import log from 'loglevel';
 
-log.setLevel('info');  // 'trace', 'debug', 'info', 'warn', 'error'
+log.setLevel('debug');  // 'trace', 'debug', 'info', 'warn', 'error'
 
 let sumbitProductBtn = document.getElementById('submit-product-btn');
 let createProduct = document.getElementById('create-product');
@@ -16,6 +16,22 @@ function allowDrop(event){
     event.preventDefault();
 }
 
+function enterActionOnHoveredElement(event){
+    let hoveredElement = document.getElementById(event.target.id);
+    hoveredElement.style.transition = 'color 0.4s ease, font-weight 0.4s ease';
+    hoveredElement.style.fontWeight = 'bold';
+    hoveredElement.style.color = '#32c9b1';
+    log.debug(`Drag Enter: ${hoveredElement.getAttribute('id')}`);
+}
+
+function leaveActionOnHoveredElement(event){
+    let hoveredElement = document.getElementById(event.target.id);
+    hoveredElement.style.transition = '';
+    hoveredElement.style.fontWeight = 'normal';
+    hoveredElement.style.color = ''
+    log.debug(`Drag Leave: ${hoveredElement.getAttribute('id')}`);
+}
+
 function dropElementOnElement(event) {
     event.preventDefault();
 
@@ -26,6 +42,9 @@ function dropElementOnElement(event) {
 
     let draggedElement = document.getElementById(currentlyDraggedElementId);
     let hoveredElement = document.getElementById(event.target.id);
+    hoveredElement.style.transition = '';
+    hoveredElement.style.fontWeight = 'normal';
+    hoveredElement.style.color = ''
 
     log.debug(`Dragged Element: ${draggedElement.getAttribute('id')}`);
     log.debug(`Hovered Element: ${hoveredElement.getAttribute('id')}`);
@@ -39,6 +58,8 @@ function dropElementOnElement(event) {
 
     let indexOfHoveredElement = shoppingList.indexOf(hoveredElement);
     draggedElement.addEventListener('drop', dropElementOnElement);
+    draggedElement.addEventListener('dragenter', enterActionOnHoveredElement);
+    draggedElement.addEventListener('dragleave', leaveActionOnHoveredElement);
     log.debug(`Index of Dragged Element: ${indexOfDraggedElement}, Index of Hovered Element: ${indexOfHoveredElement}`);
     if (indexOfHoveredElement == indexOfDraggedElement){
         shoppingList.splice(indexOfHoveredElement + 1, 0, draggedElement);
@@ -77,20 +98,19 @@ function drop(event){
     if (shoppingList.includes(droppedElement)) return;
 
     droppedElement.addEventListener('drop', dropElementOnElement);
+    droppedElement.addEventListener('dragenter', enterActionOnHoveredElement);
+    droppedElement.addEventListener('dragleave', leaveActionOnHoveredElement);
     shoppingList.push(droppedElement);
+
     updateToBuy();
     currentlyDraggedElementId = null;
 }
 
 toBuy.addEventListener('dragover', allowDrop);
-toBuy.addEventListener('drop', drop); 
+toBuy.addEventListener('drop', drop);
 
 function startDragProduct(event){
     currentlyDraggedElementId = event.target.id;
-}
-
-function dontAllowDrop(event) {
-    event.preventDefault();
 }
 
 function submitProductButtonClicked(){
@@ -100,7 +120,7 @@ function submitProductButtonClicked(){
     let productId = 'product-' + Date.now();
     newProduct.setAttribute('id', productId);
     newProduct.addEventListener('dragstart', startDragProduct);
-    newProduct.addEventListener('dragover', dontAllowDrop);
+    newProduct.addEventListener('dragover', allowDrop);
     products.appendChild(newProduct);
 }
 
