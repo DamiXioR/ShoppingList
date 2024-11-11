@@ -17,17 +17,13 @@ function allowDrop(event){
 
 function enterActionOnHoveredItem(event){
     const hoveredItem = document.getElementById(event.target.id);
-    hoveredItem.style.transition = 'color 0.4s ease, font-weight 0.4s ease';
-    hoveredItem.style.fontWeight = 'bold';
-    hoveredItem.style.color = '#32c9b1';
+    hoveredItem.classList.add('hovered-item');
     log.debug(`Drag Enter: ${hoveredItem.getAttribute('id')}`);
 }
 
 function leaveActionOnHoveredItem(event){
     const hoveredItem = document.getElementById(event.target.id);
-    hoveredItem.style.transition = '';
-    hoveredItem.style.fontWeight = 'normal';
-    hoveredItem.style.color = ''
+    hoveredItem.classList.remove('hovered-item');
     log.debug(`Drag Leave: ${hoveredItem.getAttribute('id')}`);
 }
 
@@ -41,9 +37,7 @@ function dropItemOnItem(event) {
 
     const draggedItem = document.getElementById(currentlyDraggedItemId);
     const hoveredItem = document.getElementById(event.target.id);
-    hoveredItem.style.transition = '';
-    hoveredItem.style.fontWeight = 'normal';
-    hoveredItem.style.color = ''
+    hoveredItem.classList.remove('hovered-item');
 
     draggedItem.addEventListener('drop', dropItemOnItem);
     draggedItem.addEventListener('dragenter', enterActionOnHoveredItem);
