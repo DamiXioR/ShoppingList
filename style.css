@@ -1,6 +1,6 @@
 body {
     font-family: 'Kaushan Script', cursive;
-    margin: 0;
+    margin: 40px 0 40px 0;
     padding: 0;
     background-color: #f4f4f9;
 }
@@ -13,7 +13,7 @@ h1 {
     display: flex;
     flex-direction: column;
     width: 1000px;
-    min-height: 1200px;
+    min-height: 800px;
     padding: 20px;
     margin: 0 auto;
     background-color: #ffffff;
