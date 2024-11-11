@@ -2,12 +2,11 @@ import log from 'loglevel';
 
 log.setLevel('debug');  // 'trace', 'debug', 'info', 'warn', 'error'
 
-let sumbitProductBtn = document.getElementById('submit-product-btn');
-let createProduct = document.getElementById('create-product');
-let products = document.getElementById('products');
-let toBuy = document.getElementById('to-buy');
-let trash = document.getElementById('trash');
-let demo = document.getElementById('demo');
+const ADD_PRODUCT_BUTTON = document.getElementById('submit-product-btn');
+const CREATE_PRODUCT = document.getElementById('create-product');
+const PRODUCTS = document.getElementById('products');
+const TO_BUY = document.getElementById('to-buy');
+const TRASH = document.getElementById('trash');
 let currentlyDraggedItemId = null;
 let isItemDropJustDone = false;
 let shoppingList = [];
@@ -17,7 +16,7 @@ function allowDrop(event){
 }
 
 function enterActionOnHoveredItem(event){
-    let hoveredItem = document.getElementById(event.target.id);
+    const hoveredItem = document.getElementById(event.target.id);
     hoveredItem.style.transition = 'color 0.4s ease, font-weight 0.4s ease';
     hoveredItem.style.fontWeight = 'bold';
     hoveredItem.style.color = '#32c9b1';
@@ -25,7 +24,7 @@ function enterActionOnHoveredItem(event){
 }
 
 function leaveActionOnHoveredItem(event){
-    let hoveredItem = document.getElementById(event.target.id);
+    const hoveredItem = document.getElementById(event.target.id);
     hoveredItem.style.transition = '';
     hoveredItem.style.fontWeight = 'normal';
     hoveredItem.style.color = ''
@@ -40,8 +39,8 @@ function dropItemOnItem(event) {
         return;
     };
 
-    let draggedItem = document.getElementById(currentlyDraggedItemId);
-    let hoveredItem = document.getElementById(event.target.id);
+    const draggedItem = document.getElementById(currentlyDraggedItemId);
+    const hoveredItem = document.getElementById(event.target.id);
     hoveredItem.style.transition = '';
     hoveredItem.style.fontWeight = 'normal';
     hoveredItem.style.color = ''
@@ -54,37 +53,37 @@ function dropItemOnItem(event) {
     log.debug(`Hovered Item: ${hoveredItem.getAttribute('id')}`);
     log.debug(`Current shopping list: ${shoppingList.map(item => item.getAttribute('id')).join(', ')}`);
 
-    let indexOfDraggedItem = shoppingList.includes(draggedItem) ? shoppingList.indexOf(draggedItem) : null;
-    let indexOfHoveredItem = shoppingList.indexOf(hoveredItem);
+    const indexOfDraggedItem = shoppingList.includes(draggedItem) ? shoppingList.indexOf(draggedItem) : null;
+    const indexOfHoveredItem = shoppingList.indexOf(hoveredItem);
 
     log.debug(`Index of Dragged Item: ${indexOfDraggedItem}, Index of Hovered Item: ${indexOfHoveredItem} before adding dragged`);
 
-    const FIRST_SL_ITEM = 0;
-    const LAST_SL_ITEM = shoppingList.length - 1;
-    const PENULTIMATE_SL_ITEM = shoppingList.length - 2;
+    const first_sl_item = 0;
+    const last_sl_item = shoppingList.length - 1;
+    const penultimate_sl_item = shoppingList.length - 2;
 
-    log.debug(`Index of the last item ${LAST_SL_ITEM}`);
-    log.debug(`Index of the penultimate item ${PENULTIMATE_SL_ITEM}`);
+    log.debug(`Index of the last item ${last_sl_item}`);
+    log.debug(`Index of the penultimate item ${penultimate_sl_item}`);
     log.debug(`Shopping list size ${shoppingList.length}`);
 
     if(indexOfDraggedItem == null){
-         if (indexOfHoveredItem >= 0 && indexOfHoveredItem < PENULTIMATE_SL_ITEM){
+         if (indexOfHoveredItem >= 0 && indexOfHoveredItem < penultimate_sl_item){
             log.debug(`${draggedItem.getAttribute('id')} is a new item. Place at the hovered item.`);
             shoppingList.splice(indexOfHoveredItem, 0, draggedItem);
-         } else if (indexOfHoveredItem == PENULTIMATE_SL_ITEM){
+         } else if (indexOfHoveredItem == penultimate_sl_item){
             log.debug(`${draggedItem.getAttribute('id')} is a new item. The hovered item is the penultimate one in the list.`);
             shoppingList.splice(indexOfHoveredItem + 1, 0, draggedItem);
-         } else if (indexOfHoveredItem == LAST_SL_ITEM){
+         } else if (indexOfHoveredItem == last_sl_item){
             log.debug(`${draggedItem.getAttribute('id')} is a new item. Hovered item is the last on the list.`);
             shoppingList.push(draggedItem);
          }
     } else {
         let draggedItemHigherFactor = indexOfDraggedItem > indexOfHoveredItem ? 1 : 0;
-        if (indexOfHoveredItem == FIRST_SL_ITEM){
+        if (indexOfHoveredItem == first_sl_item){
             log.debug(`${draggedItem.getAttribute('id')} exists. Hovered item is the last on the list, put dragged item first.`);
             shoppingList.unshift(draggedItem);
             shoppingList.splice(indexOfDraggedItem + draggedItemHigherFactor, 1);
-        } else if (indexOfHoveredItem == LAST_SL_ITEM) {
+        } else if (indexOfHoveredItem == last_sl_item) {
             log.debug(`${draggedItem.getAttribute('id')} exists. Hovered item is the last on the list.`);
             shoppingList.push(draggedItem);
             shoppingList.splice(indexOfDraggedItem + draggedItemHigherFactor, 1);
@@ -109,15 +108,15 @@ function dropItemOnItem(event) {
 
 function removeToBuy() {
     shoppingList.forEach(item => {
-        if(toBuy.contains(item)){
-            toBuy.removeChild(item);
+        if(TO_BUY.contains(item)){
+            TO_BUY.removeChild(item);
         }
     });
 }
 
 function addToBuy(){
     shoppingList.forEach(item => {
-        toBuy.appendChild(item);
+        TO_BUY.appendChild(item);
     });
 }
 function updateToBuy() {
@@ -148,25 +147,25 @@ function startDragProduct(event){
 }
 
 function submitProductButtonClicked(){
-    let newProduct = document.createElement('p');
-    newProduct.innerHTML = createProduct.value;
+    const newProduct = document.createElement('p');
+    newProduct.innerHTML = CREATE_PRODUCT.value;
     newProduct.setAttribute('draggable', 'true');
-    let productId = 'product-' + Date.now();
+    const productId = 'product-' + Date.now();
     newProduct.setAttribute('id', productId);
     newProduct.addEventListener('dragstart', startDragProduct);
     newProduct.addEventListener('dragover', allowDrop);
-    products.appendChild(newProduct);
+    PRODUCTS.appendChild(newProduct);
 }
 
-sumbitProductBtn.addEventListener('click', submitProductButtonClicked);
+ADD_PRODUCT_BUTTON.addEventListener('click', submitProductButtonClicked);
 
-toBuy.addEventListener('dragover', allowDrop);
-toBuy.addEventListener('drop', drop);
+TO_BUY.addEventListener('dragover', allowDrop);
+TO_BUY.addEventListener('drop', drop);
 
 function dropInTrash(event){
     event.preventDefault();
     log.debug(`Shopping list size before trash ${shoppingList.length}`);
-    let draggedItem = document.getElementById(currentlyDraggedItemId);
+    const draggedItem = document.getElementById(currentlyDraggedItemId);
     if(shoppingList.includes(draggedItem)){
         log.debug(`Dragged Item before remove: ${draggedItem.getAttribute('id')}`);
         removeToBuy();
@@ -174,11 +173,11 @@ function dropInTrash(event){
         shoppingList.splice(indexOfDraggedItem, 1);
         addToBuy();
     } else {
-        Array.from(products.childNodes).indexOf(draggedItem) !== -1 ? products.removeChild(draggedItem) : null;
+        Array.from(PRODUCTS.childNodes).indexOf(draggedItem) !== -1 ? PRODUCTS.removeChild(draggedItem) : null;
     }
     log.debug(`Shopping list size after trash ${shoppingList.length}`);
     currentlyDraggedItemId = null;
 }
 
-trash.addEventListener('dragover', allowDrop);
-trash.addEventListener('drop', dropInTrash);
+TRASH.addEventListener('dragover', allowDrop);
+TRASH.addEventListener('drop', dropInTrash);
