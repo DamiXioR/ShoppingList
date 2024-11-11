@@ -74,7 +74,7 @@ function dropItemOnItem(event) {
     } else {
         let draggedItemHigherFactor = indexOfDraggedItem > indexOfHoveredItem ? 1 : 0;
         if (indexOfHoveredItem == first_sl_item){
-            log.debug(`${draggedItem.getAttribute('id')} exists. Hovered item is the last on the list, put dragged item first.`);
+            log.debug(`${draggedItem.getAttribute('id')} exists. Hovered item is the first on the list, put dragged item first.`);
             shoppingList.unshift(draggedItem);
             shoppingList.splice(indexOfDraggedItem + draggedItemHigherFactor, 1);
         } else if (indexOfHoveredItem == last_sl_item) {
@@ -82,11 +82,11 @@ function dropItemOnItem(event) {
             shoppingList.push(draggedItem);
             shoppingList.splice(indexOfDraggedItem + draggedItemHigherFactor, 1);
         } else if (draggedItemHigherFactor){
-            log.debug(`${draggedItem.getAttribute('id')} exists. Pushed on hovered Item place. Dragged is higher than hovered.`);
+            log.debug(`${draggedItem.getAttribute('id')} exists. Pushed on hovered Item place. Dragged item is higher than hovered item.`);
             shoppingList.splice(indexOfHoveredItem, 0, draggedItem);
             shoppingList.splice(indexOfDraggedItem + draggedItemHigherFactor, 1);
         } else {
-            log.debug(`${draggedItem.getAttribute('id')} exists. Pushed on hovered Item place. Dragged is lower than hovered.`);
+            log.debug(`${draggedItem.getAttribute('id')} exists. Pushed on hovered Item place. Dragged item is lower than hovered item.`);
             shoppingList.splice(indexOfHoveredItem + 1, 0, draggedItem);
             shoppingList.splice(indexOfDraggedItem + draggedItemHigherFactor, 1);
         }
