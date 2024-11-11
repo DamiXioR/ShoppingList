@@ -107,15 +107,22 @@ function dropItemOnItem(event) {
     currentlyDraggedItemId = null;
 }
 
-function updateToBuy() {
+function removeToBuy() {
     shoppingList.forEach(item => {
         if(toBuy.contains(item)){
             toBuy.removeChild(item);
         }
     });
+}
+
+function addToBuy(){
     shoppingList.forEach(item => {
         toBuy.appendChild(item);
     });
+}
+function updateToBuy() {
+    removeToBuy();
+    addToBuy();
 }
 
 function drop(event){
@@ -155,3 +162,23 @@ sumbitProductBtn.addEventListener('click', submitProductButtonClicked);
 
 toBuy.addEventListener('dragover', allowDrop);
 toBuy.addEventListener('drop', drop);
+
+function dropInTrash(event){
+    event.preventDefault();
+    log.debug(`Shopping list size before trash ${shoppingList.length}`);
+    let draggedItem = document.getElementById(currentlyDraggedItemId);
+    if(shoppingList.includes(draggedItem)){
+        log.debug(`Dragged Item before remove: ${draggedItem.getAttribute('id')}`);
+        removeToBuy();
+        const indexOfDraggedItem = shoppingList.indexOf(draggedItem);
+        shoppingList.splice(indexOfDraggedItem, 1);
+        addToBuy();
+    } else {
+        Array.from(products.childNodes).indexOf(draggedItem) !== -1 ? products.removeChild(draggedItem) : null;
+    }
+    log.debug(`Shopping list size after trash ${shoppingList.length}`);
+    currentlyDraggedItemId = null;
+}
+
+trash.addEventListener('dragover', allowDrop);
+trash.addEventListener('drop', dropInTrash);

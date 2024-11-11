@@ -64,6 +64,11 @@ body {
     border-color: #40E0D0;
 }
 
+.activity-field-title{
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
 #shopping-list {
     width: 100%;
 }
