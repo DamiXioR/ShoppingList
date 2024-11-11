@@ -72,7 +72,7 @@ function dropItemOnItem(event) {
             shoppingList.push(draggedItem);
          }
     } else {
-        let draggedItemHigherFactor = indexOfDraggedItem > indexOfHoveredItem ? 1 : 0;
+        const draggedItemHigherFactor = indexOfDraggedItem > indexOfHoveredItem ? 1 : 0;
         if (indexOfHoveredItem == first_sl_item){
             log.debug(`${draggedItem.getAttribute('id')} exists. Hovered item is the first on the list, put dragged item first.`);
             shoppingList.unshift(draggedItem);
@@ -124,7 +124,7 @@ function drop(event){
         isItemDropJustDone = false;
         return;
     }
-    let droppedItem = document.getElementById(currentlyDraggedItemId);
+    const droppedItem = document.getElementById(currentlyDraggedItemId);
     if (shoppingList.includes(droppedItem)) return;
 
     droppedItem.addEventListener('drop', dropItemOnItem);
